@@ -1,0 +1,18 @@
+{
+	"name": "ls_azure_sql",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "sql-server-demo-169.database.windows.net",
+			"database": "sql-db-demo",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"hostNameInCertificate": "",
+			"authenticationType": "SQL",
+			"userName": "prabhat",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEM4NjU4MUNGLTA3MjQtNENFNC1CQkQ5LTNEMzM3OTBGMzY5Ql81YzE3NDBjYS04OTY4LTQxY2UtODIwMi1kNWRmYzNhYmUzYTkiDQp9"
+		}
+	}
+}

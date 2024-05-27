@@ -1,0 +1,197 @@
+{
+	"name": "pl_pipeline_switch",
+	"properties": {
+		"activities": [
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.case_value",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "HTTP_SQL",
+							"activities": [
+								{
+									"name": "Execute_sql_pipeline",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "pl_copy_http_sql",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"base_url": {
+												"value": "@pipeline().parameters.base_url",
+												"type": "Expression"
+											},
+											"Relative_url": {
+												"value": "@pipeline().parameters.Relative_url",
+												"type": "Expression"
+											},
+											"schema": {
+												"value": "@pipeline().parameters.schema",
+												"type": "Expression"
+											},
+											"table_name": {
+												"value": "@pipeline().parameters.table_name",
+												"type": "Expression"
+											},
+											"column_mapping": {
+												"value": "@pipeline().parameters.column_mapping",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "HTTP_ADLS",
+							"activities": [
+								{
+									"name": "Execute Pipeline_pl_blob",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "pl_copy_http_adls",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"base_url": {
+												"value": "@pipeline().parameters.base_url",
+												"type": "Expression"
+											},
+											"Relative_url": {
+												"value": "@pipeline().parameters.Relative_url",
+												"type": "Expression"
+											},
+											"container": {
+												"value": "@pipeline().parameters.container",
+												"type": "Expression"
+											},
+											"directory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"file_name": {
+												"value": "@pipeline().parameters.file_name",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "ADLS_SQL",
+							"activities": [
+								{
+									"name": "Execute Pipeline PL_COPY_ADLS_SQL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "pl_copy_adls_sql",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"container": {
+												"value": "@pipeline().parameters.container",
+												"type": "Expression"
+											},
+											"directory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"file_name": {
+												"value": "@pipeline().parameters.file_name",
+												"type": "Expression"
+											},
+											"schema": {
+												"value": "@pipeline().parameters.schema",
+												"type": "Expression"
+											},
+											"table_name": {
+												"value": "@pipeline().parameters.table_name",
+												"type": "Expression"
+											},
+											"column_mapping": {
+												"value": "@pipeline().parameters.column_mapping",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					],
+					"defaultActivities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 10
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"case_value": {
+				"type": "string"
+			},
+			"base_url": {
+				"type": "string"
+			},
+			"Relative_url": {
+				"type": "string"
+			},
+			"schema": {
+				"type": "string"
+			},
+			"table_name": {
+				"type": "string"
+			},
+			"container": {
+				"type": "string"
+			},
+			"directory": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			},
+			"column_mapping": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-27T13:17:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

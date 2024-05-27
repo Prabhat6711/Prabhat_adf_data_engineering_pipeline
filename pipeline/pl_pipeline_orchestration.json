@@ -1,0 +1,117 @@
+{
+	"name": "pl_pipeline_orchestration",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_dl_ecdc",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_dl_lookup",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_dl_ecdc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_dl_ecdc').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Execute_pl_pipeline_switch",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pl_pipeline_switch",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"case_value": {
+										"value": "@item()['sink']",
+										"type": "Expression"
+									},
+									"base_url": {
+										"value": "@item()['sourceBaseURL']",
+										"type": "Expression"
+									},
+									"Relative_url": {
+										"value": "@item()['sourceRelativeURL']",
+										"type": "Expression"
+									},
+									"schema": {
+										"value": "@item()['schema']",
+										"type": "Expression"
+									},
+									"table_name": {
+										"value": "@item()['table_name']",
+										"type": "Expression"
+									},
+									"container": {
+										"value": "@item()['ContainerName']",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@item()['directory']",
+										"type": "Expression"
+									},
+									"file_name": {
+										"value": "@item()['sinkFileName']",
+										"type": "Expression"
+									},
+									"column_mapping": {
+										"value": "@item()['column_mapping']",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-05-27T12:15:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
