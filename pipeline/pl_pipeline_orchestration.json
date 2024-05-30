@@ -110,6 +110,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "pl_data_engineering_pipeline_orchestration_folder"
+		},
 		"annotations": [],
 		"lastPublishTime": "2024-05-27T12:15:45Z"
 	},
